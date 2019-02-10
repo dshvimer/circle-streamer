@@ -9,18 +9,21 @@ address = ("127.0.0.1" , 8000)
 sock.connect(address)
 
 def process(img):
-    blur = cv2.GaussianBlur(img, (11,11), 0)
+    blur = cv2.GaussianBlur(img, (3,3), 0)
     gray = cv2.cvtColor(blur, cv2.COLOR_BGR2GRAY)
     _, thresh = cv2.threshold(gray, 75, 255, cv2.THRESH_BINARY)
-    mask = cv2.erode(thresh, None , iterations = 2)
-    mask = cv2.dilate(mask, None , iterations = 2)
-    return mask
+    # mask = cv2.erode(thresh, None , iterations = 1)
+    # mask = cv2.dilate(mask, None , iterations = 1)
+    # return mask
+    return thresh
 
 def isCircular(con):
     area = cv2.contourArea(con)
     perimeter = cv2.arcLength(con, True)
+    if perimeter == 0:
+        return False
     circularity = 4*math.pi*(area/ (perimeter**2))
-    if area < 300:
+    if (area < 20) and (area > 40):
         return False
     elif perimeter == 0:
         return False
